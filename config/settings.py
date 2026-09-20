@@ -140,3 +140,6 @@ MAILERS = {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
 }
+
+LANGUAGE_CODE = "id"
+USE_I18N = True
