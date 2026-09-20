@@ -1,0 +1,14 @@
+{# templates/admin/services/servicerecord/delete_selected_confirmation.html #}
+{% extends "admin/delete_selected_confirmation.html" %}
+
+{% block content %}
+<div style="border-left: 4px solid #d97706; background: #fef3c7; color: #78350f; padding: 10px 15px; margin-bottom: 15px;">
+    <strong>Perhatian:</strong> Menghapus Service Record yang dipilih akan otomatis:
+    <ul>
+        <li>Mengembalikan stok sparepart yang terpakai di tiap servis yang dihapus</li>
+        <li>Menghitung ulang Status, Last Service Date, dan Last Service Odometer kendaraan terkait berdasarkan riwayat servis yang tersisa — status bisa berubah ke arah manapun (NEW, ACTIVE, atau kembali INACTIVE)</li>
+        <li>FollowUp yang sudah ada tidak ikut berubah atau terhapus, meskipun status dan riwayat servisnya berubah</li>
+    </ul>
+</div>
+{{ block.super }}
+{% endblock %}

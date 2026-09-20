@@ -35,16 +35,24 @@ class VehicleAdmin(admin.ModelAdmin):
     list_display = ("plate_number", "brand", "model_name", "customer", "vehicle_type", "status", "last_service_date")
     list_filter = ("status", "vehicle_type", "created_at")
     search_fields = ("plate_number", "brand", "model_name", "customer__name")
-    readonly_fields = ("status", "last_service_date", "created_at", "updated_at")
     fieldsets = (
         ("Informasi Kendaraan", {
             "fields": ("customer", "plate_number", "brand", "model_name", "vehicle_type")
         }),
         ("Status & Riwayat", {
-            "fields": ("status", "last_service_date", "last_service_odometer")
+            "fields": ("status", "last_service_date", "last_service_odometer"),
+            "description": (
+                "Dihitung otomatis dari riwayat servis. "
+                "bisa tertimpa saat ada ServiceRecord baru/dihapus, atau saat batch job harian jalan."
+            ),
         }),
         ("Metadata", {
             "fields": ("created_at", "updated_at"),
             "classes": ("collapse",)
         }),
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.role == "OWNER":
+            return ["created_at", "updated_at"]
+        return ["status", "last_service_date", "last_service_odometer", "created_at", "updated_at"]

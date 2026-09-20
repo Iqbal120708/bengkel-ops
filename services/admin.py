@@ -11,6 +11,9 @@ class ServiceRecordItemInline(admin.TabularInline):
 
 @admin.register(ServiceRecord)
 class ServiceRecordAdmin(admin.ModelAdmin):
+    delete_confirmation_template = "admin/services/servicerecord/delete_confirmation.html"
+    delete_selected_confirmation_template = "admin/services/servicerecord/delete_selected_confirmation.html"
+    
     list_display = ("vehicle", "service_date", "service_type", "cost", "created_by", "created_at")
     list_filter = ("service_date", "service_type", "created_at")
     search_fields = ("vehicle__plate_number", "vehicle__customer__name", "service_type", "notes")
