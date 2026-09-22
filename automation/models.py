@@ -6,9 +6,8 @@ class AutomationSetting(models.Model):
     new_customer_followup_delay_days = models.PositiveIntegerField(default=3)
     reactivation_cooldown_days = models.PositiveIntegerField(default=14)
     vip_min_service_count = models.PositiveIntegerField(default=4)
-    vip_min_total_spending = models.DecimalField(max_digits=12, decimal_places=2, default=1500000)
+    vip_min_total_spending = models.DecimalField(max_digits=12, decimal_places=0, default=1500000)
     low_stock_threshold_default = models.PositiveIntegerField(default=5)
-    margin_percentage_default = models.DecimalField(max_digits=5, decimal_places=2, default=30)
 
     def save(self, *args, **kwargs):
         self.pk = 1  # enforce singleton
