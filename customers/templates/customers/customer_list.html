@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Customer{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-bold">Customer</h1>
+    <a href="/admin/customers/customer/add/" target="_blank"
+       class="text-sm bg-gray-900 text-white px-3 py-2 rounded">
+        + Tambah Customer
+    </a>
+</div>
+
+<div class="mb-3">
+    <input type="text" name="q" value="{{ query }}"
+           placeholder="Cari nama atau no. HP..."
+           hx-get="{% url 'customers:customer_list' %}"
+           hx-trigger="keyup changed delay:300ms, search"
+           hx-target="#customer-rows"
+           hx-indicator="#search-spinner"
+           class="border border-gray-300 rounded px-3 py-2 w-full">
+    <span id="search-spinner" class="htmx-indicator text-xs text-gray-400">Mencari...</span>
+</div>
+
+<div id="customer-rows">
+    {% include "customers/_customer_list_rows.html" %}
+</div>
+{% endblock %}

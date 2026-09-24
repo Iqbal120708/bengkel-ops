@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load customer_extras %}
+{% block title %}{{ customer.name }}{% endblock %}
+{% block content %}
+<a href="{% url 'customers:customer_list' %}" class="text-sm text-gray-500 hover:underline">&larr; Kembali ke daftar</a>
+
+<div class="flex justify-between items-start mt-3 mb-6">
+    <div>
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            {{ customer.name }}
+            {% if customer.is_vip %}
+                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">VIP</span>
+            {% endif %}
+        </h1>
+        <p class="text-sm text-gray-600 mt-1">{{ customer.phone }}</p>
+        {% if customer.email %}<p class="text-sm text-gray-600">{{ customer.email }}</p>{% endif %}
+        {% if customer.address %}<p class="text-sm text-gray-600">{{ customer.address }}</p>{% endif %}
+        <p class="text-xs text-gray-400 mt-1">Customer sejak {{ customer.created_at|date:"d M Y" }}</p>
+    </div>
+    <a href="/admin/customers/customer/{{ customer.pk }}/change/" target="_blank"
+       class="text-sm bg-gray-900 text-white px-3 py-2 rounded whitespace-nowrap">
+        Edit di Admin
+    </a>
+</div>
+
+<h2 class="font-semibold mb-2">Kendaraan ({{ vehicles.count }})</h2>
+<table class="w-full text-sm border-collapse">
+    <thead>
+        <tr class="text-left border-b border-gray-200 text-gray-500">
+            <th class="py-2">Plat</th>
+            <th>Merk/Model</th>
+            <th>Status</th>
+            <th>Servis akhir</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vehicle in vehicles %}
+        <tr class="border-b border-gray-100 hover:bg-gray-100 cursor-pointer"
+            onclick="window.location='{% url "customers:vehicle_detail" vehicle.pk %}'">
+            <td class="py-2">{{ vehicle.plate_number }}</td>
+            <td>{{ vehicle.brand }} {{ vehicle.model_name }}</td>
+            <td>
+                <span class="text-xs px-2 py-1 rounded {{ vehicle.status|status_badge_class }}">
+                    {{ vehicle.status }}
+                </span>
+            </td>
+            <td>{{ vehicle.last_service_date|date:"d M Y"|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="py-6 text-center text-gray-400">Belum ada kendaraan.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,38 @@
+<table class="w-full text-sm border-collapse">
+    <thead>
+        <tr class="text-left border-b border-gray-200 text-gray-500">
+            <th class="py-2">Nama</th>
+            <th>No. HP</th>
+            <th>Kendaraan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in page_obj %}
+        <tr class="border-b border-gray-100 hover:bg-gray-100">
+            <td class="py-2">
+                <a href="{% url 'customers:customer_detail' customer.pk %}" class="text-blue-700 hover:underline">
+                    {{ customer.name }}
+                </a>
+            </td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.vehicles.count }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="py-6 text-center text-gray-400">Belum ada customer.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="flex items-center gap-3 mt-3 text-sm text-gray-600">
+    {% if page_obj.has_previous %}
+        <button hx-get="?q={{ query }}&page={{ page_obj.previous_page_number }}"
+                hx-target="#customer-rows" class="underline">Sebelumnya</button>
+    {% endif %}
+    <span>Hal {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <button hx-get="?q={{ query }}&page={{ page_obj.next_page_number }}"
+                hx-target="#customer-rows" class="underline">Berikutnya</button>
+    {% endif %}
+</div>
+{% endif %}

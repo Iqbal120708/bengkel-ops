@@ -118,4 +118,4 @@ class ServiceRecordAdmin(admin.ModelAdmin):
             parts_total += price * qty
     
         cost = parts_total + labor
-        return JsonResponse({"parts_total": str(parts_total), "cost": f"{cost.0f}"})
+        return JsonResponse({"parts_total": str(parts_total), "cost": f"{cost}"})

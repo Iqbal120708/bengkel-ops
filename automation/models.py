@@ -13,6 +13,11 @@ class AutomationSetting(models.Model):
         self.pk = 1  # enforce singleton
         super().save(*args, **kwargs)
         
+    @classmethod
+    def load(cls):
+        obj, _created = cls.objects.get_or_create(pk=1)
+        return obj
+        
     def __str__(self):
         return "Automation Setting"
         

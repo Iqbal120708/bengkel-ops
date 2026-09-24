@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load customer_extras %}
+{% block title %}{{ vehicle.plate_number }}{% endblock %}
+{% block content %}
+<a href="{% url 'customers:customer_detail' vehicle.customer.pk %}" class="text-sm text-gray-500 hover:underline">
+    &larr; Kembali ke {{ vehicle.customer.name }}
+</a>
+
+<div class="flex justify-between items-start mt-3 mb-4">
+    <div>
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            {{ vehicle.plate_number }} — {{ vehicle.brand }} {{ vehicle.model_name }}
+            <span class="text-xs px-2 py-1 rounded {{ vehicle.status|status_badge_class }}">
+                {{ vehicle.status }}
+            </span>
+        </h1>
+        <p class="text-sm text-gray-600 mt-1">{{ vehicle.get_vehicle_type_display }}</p>
+        <p class="text-sm text-gray-600">KM terakhir: {{ vehicle.last_service_odometer|default:"-" }}</p>
+        <p class="text-sm text-gray-600">Servis terakhir: {{ vehicle.last_service_date|date:"d M Y"|default:"-" }}</p>
+    </div>
+    <div class="flex flex-col gap-2 items-end">
+        <a href="/admin/services/servicerecord/add/?vehicle={{ vehicle.pk }}" target="_blank"
+           class="text-sm bg-blue-600 text-white px-3 py-2 rounded whitespace-nowrap">
+            + Tambah Servis
+        </a>
+        <a href="/admin/customers/vehicle/{{ vehicle.pk }}/change/" target="_blank"
+           class="text-sm bg-gray-900 text-white px-3 py-2 rounded whitespace-nowrap">
+            Edit di Admin
+        </a>
+    </div>
+</div>
+</div>
+
+{% if pending_followup %}
+<div class="border border-red-200 bg-red-50 rounded p-3 mb-6">
+    <p class="text-sm font-semibold text-red-800">
+        ⚠ Follow-up: {{ pending_followup.get_type_display }} — Priority: {{ pending_followup.get_priority_display }}
+    </p>
+    <p class="text-sm text-red-700">
+        Menunggu, dijadwalkan {{ pending_followup.scheduled_at|date:"d M Y" }}
+    </p>
+    <a href="#" class="text-sm text-red-800 underline mt-1 inline-block">
+        Kerjakan di halaman Follow-up &rarr;
+    </a>
+</div>
+{% endif %}
+
+<h2 class="font-semibold mb-2">Riwayat Servis</h2>
+<div class="space-y-3">
+    {% for record in service_records %}
+    <div class="border border-gray-200 rounded p-3">
+        <div class="flex justify-between">
+            <span class="font-medium">{{ record.service_date|date:"d M Y" }} — {{ record.service_type }}</span>
+            <span class="font-medium">Rp{{ record.cost|floatformat:0 }}</span>
+        </div>
+        <p class="text-sm text-gray-600">
+            KM: {{ record.odometer|default:"-" }}
+            {% if record.items.all %}
+                · Sparepart:
+                {% for item in record.items.all %}{{ item.sparepart.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            {% endif %}
+        </p>
+        {% if record.notes %}<p class="text-sm text-gray-500">Catatan: {{ record.notes }}</p>{% endif %}
+        {% if record.created_by %}
+            <p class="text-xs text-gray-400 mt-1">Dicatat oleh: {{ record.created_by.username }}</p>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p class="text-gray-400">Belum ada riwayat servis.</p>
+    {% endfor %}
+</div>
+{% endblock %}
