@@ -47,7 +47,11 @@ INSTALLED_APPS = [
     "inventory",
     "services",
     "automation",
+    "phonenumber_field",
 ]
+
+PHONENUMBER_DEFAULT_REGION = "ID"
+PHONENUMBER_DEFAULT_FORMAT = "E164"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -142,3 +146,5 @@ MAILERS = {
 
 LANGUAGE_CODE = "id"
 USE_I18N = True
+
+LOGIN_URL = "/admin/login/"

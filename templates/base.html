@@ -11,5 +11,11 @@
     <main class="max-w-4xl mx-auto p-4">
         {% block content %}{% endblock %}
     </main>
+    {% csrf_token %}
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        });
+    </script>
 </body>
 </html>

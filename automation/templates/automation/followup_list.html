@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+    <h1 class="text-xl font-semibold">Follow-up</h1>
+    <span id="followup-count" class="text-sm text-gray-500">{{ rows|length }} Pending</span>
+</div>
+
+<table class="w-full text-sm">
+    <thead class="text-left text-gray-500 border-b">
+        <tr>
+            <th class="py-2">Customer</th>
+            <th>Kendaraan</th>
+            <th>Alasan</th>
+            <th>Prioritas</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody id="followup-tbody">
+        <tr id="followup-empty-row" class="{% if rows %}hidden{% endif %}">
+            <td colspan="5" class="py-4 text-center text-gray-400">Belum ada follow-up pending.</td>
+        </tr>
+        {% for row in rows %}
+        <tr id="followup-row-{{ row.followup.pk }}"
+            class="border-b {% if row.followup.priority == 'HIGH' %}border-l-4 border-l-gray-800{% endif %}">
+            <td class="py-2">{{ row.customer.name }}</td>
+            <td>{{ row.vehicle.brand }} {{ row.vehicle.model_name }} ({{ row.vehicle.plate_number }})</td>
+            <td>{{ row.reason }}</td>
+            <td class="{% if row.followup.priority == 'HIGH' %}font-semibold{% endif %}">
+                {{ row.followup.priority }}
+            </td>
+            <td class="space-x-2">
+                {% if row.wa_link %}
+                    <a href="{{ row.wa_link }}" target="_blank" class="underline">Buka WhatsApp</a>
+                {% else %}
+                    <span class="text-red-600" title="Nomor HP tidak valid, cek data customer">No. HP invalid</span>
+                {% endif %}
+                <button hx-post="{% url 'automation:followup_complete' row.followup.pk %}"
+                        hx-target="#followup-row-{{ row.followup.pk }}" hx-swap="outerHTML">
+                    Selesai
+                </button>
+                <button hx-post="{% url 'automation:followup_cancel' row.followup.pk %}"
+                        hx-target="#followup-row-{{ row.followup.pk }}" hx-swap="outerHTML"
+                        hx-confirm="Batalkan follow-up ini? Kendaraan tidak akan dicek ulang otomatis sampai ada servis baru.">
+                    Batalkan
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

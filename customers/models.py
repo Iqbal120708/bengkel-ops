@@ -14,6 +14,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Coalesce
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 from automation.models import AutomationSetting
 from services.models import ServiceRecord
@@ -57,7 +58,7 @@ class CustomerQuerySet(models.QuerySet):
     
 class Customer(models.Model):
     name = models.CharField(max_length=150)
-    phone = models.CharField(max_length=20)
+    phone = PhoneNumberField()
     email = models.EmailField(blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

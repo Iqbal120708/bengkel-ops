@@ -39,7 +39,7 @@
     <p class="text-sm text-red-700">
         Menunggu, dijadwalkan {{ pending_followup.scheduled_at|date:"d M Y" }}
     </p>
-    <a href="#" class="text-sm text-red-800 underline mt-1 inline-block">
+    <a href="{% url 'automation:followup_list' %}#followup-row-{{ pending_followup.pk }}" class="text-sm text-red-800 underline mt-1 inline-block">
         Kerjakan di halaman Follow-up &rarr;
     </a>
 </div>
