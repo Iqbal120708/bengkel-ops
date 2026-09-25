@@ -8,9 +8,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.12/htmx.min.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
+
+    {% if user.is_authenticated %}
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 flex items-center justify-between h-14">
+
+            <a href="{% url 'dashboard_index' %}" class="font-semibold text-gray-800">
+                Bengkel
+            </a>
+
+            <div class="flex items-center gap-1 text-sm">
+                <a href="{% url 'dashboard_index' %}"
+                   class="px-3 py-2 rounded-md {% if request.resolver_match.url_name == 'dashboard-index' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+                    Dashboard
+                </a>
+                <a href="{% url 'customers:customer_list' %}"
+                   class="px-3 py-2 rounded-md {% if request.resolver_match.url_name == 'customer-list' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+                    Customer
+                </a>
+                <a href="{% url 'automation:followup_list' %}"
+                   class="px-3 py-2 rounded-md {% if request.resolver_match.url_name == 'followup-list' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+                    Follow-up
+                </a>
+                <a href="{% url 'admin:index' %}" class="px-3 py-2 rounded-md text-gray-600 hover:bg-gray-50">
+                    Admin
+                </a>
+            </div>
+
+            <div class="flex items-center gap-3 text-sm text-gray-500">
+                <span>{{ user.get_full_name|default:user.username }}</span>
+                <form method="post" action="{% url 'admin:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="hover:text-gray-800">Keluar</button>
+                </form>
+            </div>
+
+        </div>
+    </nav>
+    {% endif %}
+
     <main class="max-w-4xl mx-auto p-4">
         {% block content %}{% endblock %}
     </main>
+
     {% csrf_token %}
     <script>
         document.body.addEventListener('htmx:configRequest', (event) => {
